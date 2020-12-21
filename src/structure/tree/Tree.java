@@ -1,40 +1,64 @@
 package structure.tree;
 
-import java.util.Comparator;
+import java.util.*;
 
-public class Tree<T> {
-    private Node<T> radix;
-    private final Comparator<T> comparator;
+public class Tree {
+    private Node<Integer> radix;
+    private final Comparator<Integer> comparator;
 
-    public Tree(Comparator<T> comparator) {
+    public Tree(Comparator<Integer> comparator) {
         this.comparator = comparator;
         radix = null;
     }
 
-    public void insert(T data) {
+    public void insert(int data) {
         radix = insertBinaryTree(data, radix);
     }
 
-    private Node<T> insertBinaryTree(T data, Node<T> node) {
+    private Node<Integer> insertBinaryTree(int data, Node<Integer> node) {
         if (node == null) {
             return new Node<>(data);
         } else {
             if (comparator.compare(node.getData(), data) > 0) {
                 node.setLeft(insertBinaryTree(data, node.getLeft()));
-            } else
+            } else if (comparator.compare(node.getData(), data) < 0)
                 node.setRight(insertBinaryTree(data, node.getRight()));
             return node;
         }
     }
 
-    public boolean exist(T data) {
+    public int getMaximumLevel() {
+        Map<Integer, List<Integer>> map = printOrder(radix, 0, new HashMap<>());
+        return map.keySet().stream().reduce(Math::max).get() + 1;
+    }
+
+    private Map<Integer, List<Integer>> printOrder(Node<Integer> root, Integer level, Map<Integer, List<Integer>> map) {
+        if (root == null) {
+            return map;
+        }
+        if (map.containsKey(level))
+            map.get(level).add(root.getData());
+        else {
+            map.put(level, new ArrayList<>(Collections.singletonList(root.getData())));
+        }
+        if (root.getLeft() != null) {
+            map = printOrder(root.getLeft(), level + 1, map);
+        }
+        if (root.getRight() != null) {
+            map = printOrder(root.getRight(), level + 1, map);
+        }
+
+        return map;
+    }
+
+    public boolean exist(int data) {
         if (!isEmpty())
             return existBinaryTree(data, radix);
         else
             return false;
     }
 
-    private boolean existBinaryTree(T data, Node<T> node) {
+    private boolean existBinaryTree(int data, Node<Integer> node) {
         if (comparator.compare(node.getData(),data) == 0) {
             return true;
         } else {
@@ -56,15 +80,15 @@ public class Tree<T> {
         return radix == null;
     }
 
-    public Node<T> getRadix() {
+    public Node<Integer> getRadix() {
         return radix;
     }
 
-    public Node<T> getLeft() {
+    public Node<Integer> getLeft() {
         return radix.getLeft();
     }
 
-    public Node<T> getRight() {
+    public Node<Integer> getRight() {
         return radix.getRight();
     }
 }
