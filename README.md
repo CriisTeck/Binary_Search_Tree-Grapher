@@ -1,4 +1,5 @@
-#BST Grapher - JAVA
+<h1>BST Grapher - JAVA</h1>
+<br>
 This small program allows for the moment, to graph binary trees.
 <br>
 <br>
