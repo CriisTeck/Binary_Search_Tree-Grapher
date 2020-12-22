@@ -32,6 +32,10 @@ public class Tree {
         return map.keySet().stream().reduce(Math::max).get() + 1;
     }
 
+    public Map<Integer, List<Integer>> getDataByLevel(){
+        return printOrder(radix, 0, new HashMap<>());
+    }
+
     private Map<Integer, List<Integer>> printOrder(Node<Integer> root, Integer level, Map<Integer, List<Integer>> map) {
         if (root == null) {
             return map;

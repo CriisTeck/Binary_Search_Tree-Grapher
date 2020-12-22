@@ -1,7 +1,11 @@
 package grapher;
 
+import structure.tree.Tree;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PrincipalFrame extends JFrame {
     private static final int width = 900;
@@ -11,18 +15,18 @@ public class PrincipalFrame extends JFrame {
     private ButtonsPanel panel_Buttons;
     private JScrollPane jsPane_GraphPanel;
 
-    public PrincipalFrame() {
+    public PrincipalFrame(ActionListener listener,Tree tree) {
         this.setSize(width, height);
         this.setLayout(new GridBagLayout());
-        initComponents();
+        initComponents(listener,tree);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    private void initComponents() {
-        panel_Buttons = new ButtonsPanel(width,100);
-        panel_toGraph = new GraphPanel(width*2,height*2);
+    private void initComponents(ActionListener listener, Tree tree) {
+        panel_Buttons = new ButtonsPanel(width,100, listener);
+        panel_toGraph = new GraphPanel(width,height,tree);
         jsPane_GraphPanel = new JScrollPane();
         jsPane_GraphPanel.setViewportView(panel_toGraph);
         jsPane_GraphPanel.setPreferredSize(new Dimension(width-20,height-100));
@@ -42,5 +46,18 @@ public class PrincipalFrame extends JFrame {
         gbc.weighty = 0.1;
         add(panel_Buttons, gbc);
 
+    }
+
+    public int getNewNode() {
+        return panel_Buttons.getNewNode();
+    }
+
+    public void paintTree(Tree tree) {
+        panel_toGraph.paintNewTree(tree);
+    }
+
+    public void myRepaint() {
+        panel_toGraph.myRepaint();
+        jsPane_GraphPanel.getHorizontalScrollBar().setValue((panel_toGraph.getWidth()/2)-jsPane_GraphPanel.getWidth()/2);
     }
 }
