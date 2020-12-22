@@ -4,11 +4,12 @@ import structure.tree.Tree;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class PrincipalFrame extends JFrame {
-    private static final int width = 900;
+    private static final int width = 800;
     private static final int height = 800;
 
     private GraphPanel panel_toGraph;
@@ -22,6 +23,11 @@ public class PrincipalFrame extends JFrame {
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.addWindowListener( new WindowAdapter() {
+            public void windowOpened( WindowEvent e ){
+                panel_Buttons.requestFocusT();
+            }
+        });
     }
 
     private void initComponents(ActionListener listener, Tree tree) {
@@ -29,7 +35,7 @@ public class PrincipalFrame extends JFrame {
         panel_toGraph = new GraphPanel(width,height,tree);
         jsPane_GraphPanel = new JScrollPane();
         jsPane_GraphPanel.setViewportView(panel_toGraph);
-        jsPane_GraphPanel.setPreferredSize(new Dimension(width-20,height-100));
+//        jsPane_GraphPanel.setPreferredSize(new Dimension(width-20,height-100));
         posicionateComponents();
     }
 
@@ -37,7 +43,7 @@ public class PrincipalFrame extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-//        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
         gbc.weighty = 0.9;
         add(jsPane_GraphPanel, gbc);
@@ -53,11 +59,15 @@ public class PrincipalFrame extends JFrame {
     }
 
     public void paintTree(Tree tree) {
-        panel_toGraph.paintNewTree(tree);
+        panel_toGraph.paintNewTree(tree,jsPane_GraphPanel,0);
     }
 
     public void myRepaint() {
         panel_toGraph.myRepaint();
+        scrollToCenter();
+    }
+    public void scrollToCenter() {
         jsPane_GraphPanel.getHorizontalScrollBar().setValue((panel_toGraph.getWidth()/2)-jsPane_GraphPanel.getWidth()/2);
+        jsPane_GraphPanel.revalidate();
     }
 }
